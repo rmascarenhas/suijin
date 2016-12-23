@@ -6,6 +6,10 @@ supported:
 
     `input`  - the path to a TIF file containing elevation data
     `output` - the path where the output of this program will be stored, in TIF format
+
+One command line flag is required, and indicates which algorithm (flow direction or
+accumulation) is to be applied in the elevation data provided. That argument is passed
+using the `--algo` option.
 """
 
 import argparse
@@ -34,4 +38,13 @@ def _add_arguments(parser):
         metavar='output',
         type=str,
         help='path to the file where the output (in TIF format) will be stored'
+    )
+
+    parser.add_argument('--algo',
+        metavar='algorithm',
+        type=str,
+        dest='algorithm',
+        required=True,
+        choices=['direction', 'accumulation'],
+        help='the algorithm to be applied in the elevation data provided'
     )

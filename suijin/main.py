@@ -10,6 +10,7 @@ def main():
     arguments = cli.run()
     print('Reading TIF from: {}'.format(arguments.input))
     print('Saving output to: {}'.format(arguments.output))
+    print('Applying algorithm: {}'.format(arguments.algorithm))
 
 # entry point of execution: if invoked from `bin/suijin`, run the `main`
 # function defined above
