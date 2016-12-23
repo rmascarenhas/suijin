@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+# suijin: invokes the data processing tool.
+#
+# This script also ensures that the Python interpreter used is of version 2
+# (the only version currently supported.) The interpreter is assumed to be in
+# the system PATH under the name of `python`. Optionally, a `PYTHON_PATH`
+# environment variable may be passed to point to the Python interpreter to be
+# used
+#
+# Example
+#
+#   $ python -V
+#   Python 3.5.2
+#
+#   $ ./bin/suijin
+#   Error: suijin runs on Python 2 only.
+#
+#   $ PYTHON_PATH=/usr/bin/python2 ./bin/suijin -h
+#   suijin: ...
+
+binpath="$(dirname $0)"
+
+if [[ -z "$PYTHON_PATH" ]]; then
+  python_interp=$(which python 2>/dev/null)
+else
+  python_interp="$PYTHON_PATH"
+fi
+
+if "$python_interp" -V 2>&1 | grep -v -q 'Python 2'; then
+  echo "Error: suijin runs on Python 2 only." >&2
+  exit 1
+fi
+
+"$python_interp" "$binpath/../suijin/main.py" $@
