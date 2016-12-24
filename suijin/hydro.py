@@ -7,7 +7,7 @@ The hydro module exposes two different classes:
 
 Each implementing the algorithm described by their names. In all cases, a TIF
 file with elevation data is received as input, and the result is stored as
-another TIF data.
+an output ASCII Grid file.
 
 Usage
 
@@ -76,7 +76,7 @@ class Grid(object):
 
     def __init__(self, elevation):
         self.elevation = elevation
-        self.data      = np.array([], ndmin=2)
+        self.data      = np.array([[]], ndmin=2)
 
     def nodata(self):
         """Returns the value used for the NODATA_value field.
@@ -98,9 +98,9 @@ class Grid(object):
         # the first row of data, there is nothing to be enforced and the first
         # row will determine the size to be expected in subsequent insertions.
         if self.data.any():
-            self.data = np.append(self.data, row, axis=0)
+            self.data = np.append(self.data, [row], axis=0)
         else:
-            self.data = np.append(self.data, row)
+            self.data = np.append(self.data, [row], axis=1)
 
     def render(self, path):
         """Generates an file in the ASCII Grid format with the data provided.
@@ -118,7 +118,9 @@ class Grid(object):
 
         with open(path, 'wb') as f:
             f.write(header)
-            np.savetxt(f, self.data, fmt='%4i')
+            for row in self.data:
+                f.write(' '.join(str(n) for n in row))
+                f.write('\n')
 
 class Direction(object):
     """Implements the flow direction algorithm.
